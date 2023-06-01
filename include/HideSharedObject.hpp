@@ -3,13 +3,15 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
+
 #include <link.h>
 
-namespace HideSharedObject {
-	void AddHiddenSharedObject(const char* name);
+#include <string>
 
-	int HookFunc(int (*)(struct dl_phdr_info *, size_t, void *), void *);
+namespace HideSharedObject {
+	void AddHiddenSharedObject(const std::string& name);
+
+	int HookFunc(int (*)(struct dl_phdr_info*, size_t, void*), void*);
 	extern void* proxy;
 }
 
