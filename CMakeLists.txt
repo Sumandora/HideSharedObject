@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_library(HideSharedObject STATIC Source/HideSharedObject.cpp)
-target_include_directories(HideSharedObject PUBLIC include)
+add_library(HideSharedObject STATIC "${PROJECT_SOURCE_DIR}/Source/HideSharedObject.cpp")
+target_include_directories(HideSharedObject PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 # Setup length-disassembler
 if (NOT (TARGET length-disassembler))
@@ -16,11 +16,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC length-disassembler)
 
 # Setup DetourHooking
 if (NOT (TARGET DetourHooking))
-    add_subdirectory("Dependencies/DetourHooking")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/Dependencies/DetourHooking")
 endif ()
 target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC DetourHooking)
 
-add_executable(HideSharedObjectExample Example/Main.cpp)
+add_executable(HideSharedObjectExample "${PROJECT_SOURCE_DIR}/Example/Main.cpp")
 target_link_libraries(HideSharedObjectExample PUBLIC HideSharedObject)
 
 enable_testing()
