@@ -21,11 +21,11 @@ void InstallHideSharedObject() {
 
 	void* functionPtr = (void*) dl_iterate_phdr;
 	size_t stolenBytes = 0;
-	while (stolenBytes <= DETOURHOOKING_MIN_LENGTH) {
+	while (stolenBytes <= DetourHooking::minLength) {
 		stolenBytes += ldisasm(static_cast<char*>(functionPtr) + stolenBytes, true);
 	}
 
-	Hook* hook = new class Hook(functionPtr, (void*) HideSharedObject::HookFunc, stolenBytes);
+    DetourHooking::Hook* hook = new DetourHooking::Hook(functionPtr, (void*) HideSharedObject::HookFunc, stolenBytes);
 	hook->Enable();
 
 	HideSharedObject::proxy = hook->trampoline;
