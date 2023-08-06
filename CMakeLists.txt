@@ -9,11 +9,15 @@ add_library(HideSharedObject STATIC Source/HideSharedObject.cpp)
 target_include_directories(HideSharedObject PUBLIC include)
 
 # Setup length-disassembler
-add_subdirectory("Dependencies/length-disassembler")
+if (NOT (TARGET length-disassembler))
+    add_subdirectory("Dependencies/length-disassembler")
+endif ()
 target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC length-disassembler)
 
 # Setup DetourHooking
-add_subdirectory("Dependencies/DetourHooking")
+if (NOT (TARGET DetourHooking))
+    add_subdirectory("Dependencies/DetourHooking")
+endif ()
 target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC DetourHooking)
 
 add_executable(HideSharedObjectExample Example/Main.cpp)
