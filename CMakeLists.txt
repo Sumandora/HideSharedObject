@@ -12,13 +12,13 @@ target_include_directories(HideSharedObject PUBLIC "${PROJECT_SOURCE_DIR}/includ
 if (NOT (TARGET length-disassembler))
     add_subdirectory("Dependencies/length-disassembler")
 endif ()
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC length-disassembler)
+target_link_libraries(${PROJECT_NAME} PUBLIC length-disassembler)
 
 # Setup DetourHooking
 if (NOT (TARGET DetourHooking))
     add_subdirectory("${PROJECT_SOURCE_DIR}/Dependencies/DetourHooking")
 endif ()
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC DetourHooking)
+target_link_libraries(${PROJECT_NAME} PUBLIC DetourHooking)
 
 add_executable(HideSharedObjectExample "${PROJECT_SOURCE_DIR}/Example/Main.cpp")
 target_link_libraries(HideSharedObjectExample PUBLIC HideSharedObject)
