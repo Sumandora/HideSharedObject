@@ -9,9 +9,9 @@
 #include <string>
 
 namespace HideSharedObject {
-	void AddHiddenSharedObject(const std::string& name);
+	void addHiddenSharedObject(const std::string& name);
 
-	int HookFunc(int (*)(struct dl_phdr_info*, size_t, void*), void*);
+	int hookFunc(int (*)(struct dl_phdr_info*, size_t, void*), void*);
 	extern void* proxy;
 }
 

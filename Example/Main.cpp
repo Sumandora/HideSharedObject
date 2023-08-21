@@ -17,9 +17,9 @@ int callback(struct dl_phdr_info* info, size_t size, void* data)
 
 void* HideSharedObject::proxy;
 
-void InstallHideSharedObject()
+void installHideSharedObject()
 {
-	HideSharedObject::AddHiddenSharedObject("libc.so");
+	HideSharedObject::addHiddenSharedObject("libc.so");
 
 	void* functionPtr = (void*)dl_iterate_phdr;
 	size_t stolenBytes = 0;
@@ -27,7 +27,7 @@ void InstallHideSharedObject()
 		stolenBytes += ldisasm(static_cast<char*>(functionPtr) + stolenBytes, true);
 	}
 
-	DetourHooking::Hook* hook = new DetourHooking::Hook(functionPtr, (void*)HideSharedObject::HookFunc, stolenBytes);
+	DetourHooking::Hook* hook = new DetourHooking::Hook(functionPtr, (void*)HideSharedObject::hookFunc, stolenBytes);
 	hook->enable();
 
 	HideSharedObject::proxy = hook->trampoline;
@@ -39,7 +39,7 @@ int main()
 	printf("Real:\n");
 	dl_iterate_phdr(callback, &data);
 
-	InstallHideSharedObject();
+	installHideSharedObject();
 
 	printf("Fake:\n");
 	dl_iterate_phdr(callback, &data);
