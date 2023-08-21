@@ -1,27 +1,33 @@
 cmake_minimum_required(VERSION 3.20)
 project(HideSharedObject)
 
-set(CMAKE_CXX_STANDARD 23)
-
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 add_library(HideSharedObject STATIC "${PROJECT_SOURCE_DIR}/Source/HideSharedObject.cpp")
-target_include_directories(HideSharedObject PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(HideSharedObject PUBLIC "${PROJECT_SOURCE_DIR}/Include")
+target_compile_options(HideSharedObject PRIVATE "-Ofast")
+target_compile_features(HideSharedObject PRIVATE cxx_std_20)
 
-# Setup length-disassembler
-if (NOT (TARGET length-disassembler))
-    add_subdirectory("Dependencies/length-disassembler")
-endif ()
-target_link_libraries(${PROJECT_NAME} PUBLIC length-disassembler)
+if(PROJECT_IS_TOP_LEVEL)
+	add_executable(HideSharedObjectExample "${PROJECT_SOURCE_DIR}/Example/Main.cpp")
+	target_link_libraries(HideSharedObjectExample PUBLIC HideSharedObject)
 
-# Setup DetourHooking
-if (NOT (TARGET DetourHooking))
-    add_subdirectory("${PROJECT_SOURCE_DIR}/Dependencies/DetourHooking")
-endif ()
-target_link_libraries(${PROJECT_NAME} PUBLIC DetourHooking)
+	include(FetchContent)
+	
+	FetchContent_Declare(LengthDisassembler
+		GIT_REPOSITORY https://github.com/Jovvik/length-disassembler
+		GIT_PROGRESS TRUE
+		GIT_SHALLOW TRUE
+		GIT_TAG 88fd89c)
+	FetchContent_MakeAvailable(LengthDisassembler)
+	target_link_libraries(HideSharedObjectExample PRIVATE length-disassembler)
 
-add_executable(HideSharedObjectExample "${PROJECT_SOURCE_DIR}/Example/Main.cpp")
-target_link_libraries(HideSharedObjectExample PUBLIC HideSharedObject)
+	FetchContent_Declare(DetourHooking
+		GIT_REPOSITORY https://github.com/Sumandora/DetourHooking
+		GIT_PROGRESS TRUE
+		GIT_SHALLOW TRUE
+		GIT_TAG abcd850)
+	FetchContent_MakeAvailable(DetourHooking)
+	target_link_libraries(HideSharedObjectExample PRIVATE DetourHooking)
 
-enable_testing()
-add_test(NAME HideSharedObjectExample COMMAND $<TARGET_FILE:HideSharedObjectExample>)
+	enable_testing()
+	add_test(NAME HideSharedObjectExample COMMAND $<TARGET_FILE:HideSharedObjectExample>)
+endif()

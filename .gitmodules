@@ -1,6 +1,0 @@
-[submodule "Dependencies/DetourHooking"]
-	path = Dependencies/DetourHooking
-	url = https://github.com/Sumandora/DetourHooking
-[submodule "Dependencies/length-disassembler"]
-	path = Dependencies/length-disassembler
-	url = https://github.com/Jovvik/length-disassembler.git
