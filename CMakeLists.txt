@@ -15,7 +15,6 @@ if(PROJECT_IS_TOP_LEVEL)
 	FetchContent_Declare(LengthDisassembler
 		GIT_REPOSITORY https://github.com/Jovvik/length-disassembler
 		GIT_PROGRESS TRUE
-		GIT_SHALLOW TRUE
 		GIT_TAG 88fd89c)
 	FetchContent_MakeAvailable(LengthDisassembler)
 	target_link_libraries(HideSharedObjectExample PRIVATE length-disassembler)
@@ -23,7 +22,6 @@ if(PROJECT_IS_TOP_LEVEL)
 	FetchContent_Declare(DetourHooking
 		GIT_REPOSITORY https://github.com/Sumandora/DetourHooking
 		GIT_PROGRESS TRUE
-		GIT_SHALLOW TRUE
 		GIT_TAG abcd850)
 	FetchContent_MakeAvailable(DetourHooking)
 	target_link_libraries(HideSharedObjectExample PRIVATE DetourHooking)

@@ -27,7 +27,7 @@ void installHideSharedObject()
 		stolenBytes += ldisasm(static_cast<char*>(functionPtr) + stolenBytes, true);
 	}
 
-	DetourHooking::Hook* hook = new DetourHooking::Hook(functionPtr, (void*)HideSharedObject::hookFunc, stolenBytes);
+	auto* hook = new DetourHooking::Hook(functionPtr, (void*)HideSharedObject::hookFunc, stolenBytes);
 	hook->enable();
 
 	HideSharedObject::proxy = hook->trampoline;

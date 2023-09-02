@@ -2,18 +2,19 @@
 
 #include <algorithm>
 #include <cstring>
+#include <link.h>
 #include <vector>
 
 static std::vector<std::string> hiddenSharedObjects;
 
-static bool __attribute((used)) check(struct dl_phdr_info* info)
+static bool __attribute((used)) check(dl_phdr_info* info)
 {
-	return std::ranges::any_of(hiddenSharedObjects, [&info](std::string sharedObject) {
+	return std::ranges::any_of(hiddenSharedObjects, [&info](const std::string& sharedObject) {
 		return std::strstr(info->dlpi_name, sharedObject.c_str());
 	});
 }
 
-static int __attribute__((naked)) passthrough(struct dl_phdr_info* rdi, size_t rsi, void* rdx)
+static int __attribute__((naked)) passthrough(dl_phdr_info* rdi, size_t rsi, void* rdx)
 {
 	__asm volatile(
 		"push %rdi;" // Save registers
@@ -44,16 +45,16 @@ void HideSharedObject::addHiddenSharedObject(const std::string& name)
 	hiddenSharedObjects.push_back(name);
 }
 
-int HideSharedObject::hookFunc(int (*__callback)(struct dl_phdr_info*, size_t, void*), void* __data)
+int HideSharedObject::hookFunc(int (*callback)(dl_phdr_info*, size_t, void*), void* __data)
 {
 	struct Data {
 		void* oldData;
 
-		int (*oldCallback)(struct dl_phdr_info*, size_t, void*);
+		int (*oldCallback)(dl_phdr_info*, size_t, void*);
 	} newData{};
 
 	newData.oldData = __data;
-	newData.oldCallback = __callback;
+	newData.oldCallback = callback;
 
-	return reinterpret_cast<int (*)(int (*)(struct dl_phdr_info*, size_t, void*), void*)>(proxy)(passthrough, &newData);
+	return reinterpret_cast<int (*)(int (*)(dl_phdr_info*, size_t, void*), void*)>(proxy)(passthrough, &newData);
 }
